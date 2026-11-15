@@ -1,0 +1,8 @@
+<Bindings>
+    <Binding name="WRC_TOGGLE_REC" header="WRC" category="ADDONS">
+        WRC_ToggleRecording()
+    </Binding>
+    <Binding name="WRC_OPEN_FOLDER" category="ADDONS">
+        WRC_OpenFolder()
+    </Binding>
+</Bindings>

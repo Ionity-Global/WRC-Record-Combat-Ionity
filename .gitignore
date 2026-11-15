@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.pyc
+build/
+dist/
+*.spec
+.pytest_cache/
+recorder/config.json
+recorder/attune.json
+recorder/wrc.log
+release/*.exe
+ffmpeg.exe
+_backup/
+release/WRC-*.zip
