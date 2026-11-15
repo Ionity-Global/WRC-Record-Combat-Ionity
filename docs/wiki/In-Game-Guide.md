@@ -11,10 +11,9 @@
 
 ## Clean screenshot
 
-The small **camera-and-sword** on the round icon, `/wrc shot` or its keybind. Hides **all** interface for one second — the whole UI (like Alt+Z), nameplates and other overlays on the world, the WRC strip and button — takes a WoW screenshot while it is gone, and puts everything back. The picture is saved in WoW's own `Screenshots` folder.
+The small **camera-and-sword** on the round icon, `/wrc shot` or its keybind. Makes **all** interface invisible for one second — the whole UI (like Alt+Z), nameplates and other overlays on the world, the WRC strip and button — takes a WoW screenshot while it is gone, and puts everything back. The picture is saved in WoW's own `Screenshots` folder.
 
-- In combat WoW does not let addons hide the interface: WRC takes a normal screenshot and says so.
-- If combat starts during the hidden second, the interface comes back immediately.
+- Works in combat too: WoW does not let addons hide the interface in combat, so WRC makes it fully transparent instead — the picture looks the same.
 - A recording that is running carries on: the recorder ignores beacon gaps of up to 3 seconds.
 
 ## Clips panel

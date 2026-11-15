@@ -147,10 +147,17 @@ function locked:GetAlpha() return self.alpha end
 function locked:SetAlpha(a) self.alpha = a end
 function locked:IsForbidden() return true end
 function WorldFrame:GetChildren() return overlay, locked end
+UIParent.alpha = 1
+function UIParent:GetAlpha() return self.alpha end
+function UIParent:SetAlpha(a) self.alpha = a end
+plateUF = widget(); plateUF.alpha = 1
+function plateUF:GetAlpha() return self.alpha end
+function plateUF:SetAlpha(a) self.alpha = a end
+C_NamePlate = { GetNamePlates = function() return { { UnitFrame = plateUF } } end }
 function Screenshot()
   local beaconShown = false
   for _, f in ipairs(frames) do if f.name == "WRCBeaconFrame" then beaconShown = f.shown end end
-  shots[#shots+1] = { ui = UIParent.shown, beacon = beaconShown, overlay = overlay.alpha, locked = locked.alpha }
+  shots[#shots+1] = { ui = UIParent.alpha, beacon = beaconShown, overlay = overlay.alpha, locked = locked.alpha, plate = plateUF.alpha }
 end
 GameTooltip = nil
 hovered = {}
@@ -824,36 +831,36 @@ def test_clean_screenshot_hides_all_interface_then_restores():
     shots = list(g.shots.values())
     assert len(shots) == 1
     shot = shots[0]
-    assert shot.ui is False and shot.beacon is False      # UI and WRC strip gone for the picture
-    assert shot.overlay == 0                             # nameplates / world overlays faded out
+    assert shot.ui == 0 and shot.beacon is False        # whole UI invisible, WRC strip gone
+    assert shot.overlay == 0 and shot.plate == 0         # world overlays and nameplates invisible
     assert shot.locked == 1                              # forbidden frames are never touched
-    assert g.UIParent.shown is True and g.overlay.alpha == 1   # everything back afterwards
+    assert g.UIParent.alpha == 1 and g.overlay.alpha == 1 and g.plateUF.alpha == 1   # all back
     assert any("clean screenshot saved" in p for p in g.printed.values())
     assert read(game) is not None                        # beacon is back and readable
 
 
-def test_clean_screenshot_in_combat_takes_normal_shot():
+def test_clean_screenshot_works_in_combat():
     game = Game()
     g = game.g
     g.combat = True
     game.slash("shot")
     shots = list(g.shots.values())
-    assert len(shots) == 1 and shots[0].ui is True       # WoW forbids hiding the UI in combat
-    assert any("in combat" in p for p in g.printed.values())
+    assert len(shots) == 1
+    assert shots[0].ui == 0 and shots[0].plate == 0      # transparent works in combat, Hide() would not
+    assert g.UIParent.shown is True                      # never Hide()s the UI (blocked in combat)
+    assert g.UIParent.alpha == 1
 
 
-def test_clean_screenshot_restores_when_combat_starts():
+def test_clean_screenshot_restores_after_one_second():
     game = Game()
     g = game.g
     g.defer_timers = True
     game.slash("shot")
-    assert g.UIParent.shown is False
-    g.fire("PLAYER_REGEN_DISABLED")                      # combat about to start: UI back at once
-    assert g.UIParent.shown is True and g.overlay.alpha == 1
+    assert g.UIParent.alpha == 0
     g.defer_timers = False
     g.run_pending()
-    assert len(list(g.shots.values())) == 0
-    assert any("cancelled" in p for p in g.printed.values())
+    assert len(list(g.shots.values())) == 1
+    assert g.UIParent.alpha == 1 and g.overlay.alpha == 1
 
 
 def test_sword_button_and_key_binding():
