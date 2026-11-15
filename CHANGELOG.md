@@ -1,7 +1,7 @@
 # WRC changelog
 
 ## 1.6.0 - 2026-11-15
-- **Clean screenshot**: the new **SHOT** pop-out under the round icon, `/wrc shot` or a key binding hides ALL interface for one second - the whole UI (like Alt+Z), nameplates and other overlays on the world, and the WRC strip and button - takes a WoW screenshot while it is gone, then puts everything back. Pictures go to WoW's own `Screenshots` folder.
+- **Clean screenshot**: the new **camera-and-sword** icon on the round WRC button (lower-right of the shield), `/wrc shot` or a key binding hides ALL interface for one second - the whole UI (like Alt+Z), nameplates and other overlays on the world, and the WRC strip and button - takes a WoW screenshot while it is gone, then puts everything back. Pictures go to WoW's own `Screenshots` folder.
   - WoW does not let addons hide the interface in combat: there it takes a normal screenshot and says so. If combat starts during the hidden second, the interface comes back at once.
   - Key binding in `/wrc settings` (Clean screenshot key) and under Options > Keybindings > AddOns > WRC.
 - Recorder: a beacon that vanishes for up to 3 seconds (clean screenshot, loading screen) no longer changes anything. Before, a gap in the beacon stopped a recording started in game.

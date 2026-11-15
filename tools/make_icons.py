@@ -1,4 +1,4 @@
-# Draws the WRC icon set (war shield, crossed swords, record dot) with plain
+# Draws the WRC icon set (war shield, crossed swords, record dot, camera-and-sword) with plain
 # geometry (no AI imagery) and the Ionity
 # wordmark from the Ionity assets repo (icons/brand/ionity-wordmark-white.png).
 #   python tools/make_icons.py
@@ -179,6 +179,47 @@ def round_icon(dot, size=128):
     return img.resize((size, size), Image.LANCZOS)
 
 
+def sword_icon(size=64):
+    """In-game clean-screenshot button: a camera with a sword crossed through it.
+    Navy camera body with cyan rim, glowing lens and flash; steel sword with cyan
+    guard and pommel laid diagonally across; dark outline and a soft cyan glow
+    so it reads on any background. Transparent everywhere else."""
+    s = size * 4
+    cam = Image.new("RGBA", (s, s), (0, 0, 0, 0))
+    d = ImageDraw.Draw(cam)
+    bx0, by0, bx1, by1 = s * 0.10, s * 0.30, s * 0.90, s * 0.80
+    rim = int(s * 0.035)
+    d.rounded_rectangle((s * 0.30, s * 0.19, s * 0.56, s * 0.34), radius=int(s * 0.04),
+                        fill=(20, 44, 68, 255), outline=CYAN + (255,), width=rim)              # viewfinder hump
+    d.rounded_rectangle((bx0, by0, bx1, by1), radius=int(s * 0.09),
+                        fill=(20, 44, 68, 255), outline=CYAN + (255,), width=rim)              # body
+    cx, cy, r = s * 0.50, s * 0.555, s * 0.17
+    d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=(8, 17, 28, 255), outline=CYAN + (255,), width=rim)  # lens ring
+    r2 = r * 0.55
+    d.ellipse((cx - r2, cy - r2, cx + r2, cy + r2), fill=CYAN + (255,))                         # lens glass
+    r3 = r * 0.20
+    d.ellipse((cx - r2 * 0.45 - r3, cy - r2 * 0.45 - r3, cx - r2 * 0.45 + r3, cy - r2 * 0.45 + r3),
+              fill=WHITE + (255,))                                                              # lens glint
+    d.rounded_rectangle((s * 0.72, s * 0.37, s * 0.83, s * 0.44), radius=int(s * 0.015), fill=WHITE + (255,))  # flash
+    blade = Image.new("RGBA", (s, s), (0, 0, 0, 0))
+    sword(ImageDraw.Draw(blade), s, s * 0.16, s * 0.86, s * 0.88, s * 0.12, int(s * 0.07))
+    art = Image.new("RGBA", (s, s), (0, 0, 0, 0))
+    art.alpha_composite(cam)
+    shadow = Image.new("RGBA", (s, s), (0, 0, 0, 0))                                            # sword sits on top
+    shadow.paste((8, 17, 28, 255), (0, 0), blade.getchannel("A").filter(ImageFilter.MaxFilter(11)))
+    art.alpha_composite(shadow)
+    art.alpha_composite(blade)
+    outline = Image.new("RGBA", (s, s), (0, 0, 0, 0))
+    outline.paste((8, 17, 28, 230), (0, 0), art.getchannel("A").filter(ImageFilter.MaxFilter(9)))
+    halo = Image.new("RGBA", (s, s), (0, 0, 0, 0))
+    halo.paste(CYAN + (255,), (0, 0), art.getchannel("A"))
+    img = Image.new("RGBA", (s, s), (0, 0, 0, 0))
+    img.alpha_composite(glow(halo, s * 0.05, 0.8))
+    img.alpha_composite(outline)
+    img.alpha_composite(art)
+    return img.resize((size, size), Image.LANCZOS)
+
+
 # White rounded square for the addon's nine-slice skin (8 px corners, anti-aliased).
 _s = 32 * 8
 _r = Image.new("L", (_s, _s), 0)
@@ -187,6 +228,8 @@ _w = Image.new("RGBA", (32, 32), (255, 255, 255, 0))
 _w.putalpha(_r.resize((32, 32), Image.LANCZOS))
 _w.save(os.path.join(ROOT, "addon", "WRC", "rounded.tga"))
 
+sword_icon(64).save(os.path.join(ROOT, "addon", "WRC", "sword.tga"))
+sword_icon(256).save(os.path.join(OUT, "wrc-sword-256.png"))
 round_icon(CYAN).save(os.path.join(ROOT, "addon", "WRC", "round_idle.tga"))
 round_icon(RED).save(os.path.join(ROOT, "addon", "WRC", "round_rec.tga"))
 round_icon(CYAN, 256).save(os.path.join(OUT, "wrc-round-idle-256.png"))

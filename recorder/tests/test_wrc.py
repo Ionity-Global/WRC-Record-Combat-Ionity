@@ -328,12 +328,12 @@ def test_addon_slash_commands_manual_test_size_corner_off():
 
 def test_addon_ingame_buttons_rec_and_folder():
     game = Game()
-    assert game.g.button_texts() == "REC,Clips,SHOT"
+    assert game.g.button_texts() == "REC,Clips"
     assert game.g.click("REC")
     hit = read(game)
-    assert hit.manual and hit.word == "REC" and game.g.button_texts() == "STOP,Clips,SHOT"
+    assert hit.manual and hit.word == "REC" and game.g.button_texts() == "STOP,Clips"
     assert game.g.click("STOP")
-    assert not read(game).manual and game.g.button_texts() == "REC,Clips,SHOT"
+    assert not read(game).manual and game.g.button_texts() == "REC,Clips"
     game.slash("folder")
     hit = read(game)
     assert hit.folder and hit.checksum_ok and not hit.enemy and not hit.manual
@@ -349,10 +349,10 @@ def test_addon_round_button_popouts_and_icon_state():
     g = game.g
     assert g.shown_buttons() == ""                      # pop-outs are hidden until you hover
     assert g.hover("WRCRoundButton", True)
-    assert g.shown_buttons() == "REC,Clips,SHOT"
+    assert g.shown_buttons() == "REC,Clips"
     g.hover("WRCRoundButton", False)                    # mouse moves onto a pop-out: they stay
     g.hover("REC", True)
-    assert g.shown_buttons() == "REC,Clips,SHOT"
+    assert g.shown_buttons() == "REC,Clips"
     g.hover("REC", False)                               # mouse leaves everything: they close
     assert g.shown_buttons() == ""
     assert g.texture_of("WRCRoundButton").endswith("round_idle.tga")
@@ -364,7 +364,7 @@ def test_addon_round_button_popouts_and_icon_state():
     assert not g.pulsing("WRCRoundButton")
     game.unit("target", player=True, faction="Alliance", attackable=True)        # an enemy appears
     assert read(game).enemy and g.pulsing("WRCRoundButton")
-    assert g.texture_of("WRCRoundButton").endswith("round_rec.tga") and g.button_texts() == "REC,Clips,SHOT"
+    assert g.texture_of("WRCRoundButton").endswith("round_rec.tga") and g.button_texts() == "REC,Clips"
     game.unit("target")
     game.advance(1)
     assert not g.pulsing("WRCRoundButton")
@@ -856,11 +856,11 @@ def test_clean_screenshot_restores_when_combat_starts():
     assert any("cancelled" in p for p in g.printed.values())
 
 
-def test_shot_popout_and_key_binding():
+def test_sword_button_and_key_binding():
     game = Game()
     g = game.g
-    g.hover("WRCRoundButton", True)
-    assert g.click("SHOT")
+    assert g.texture_of("WRCShotButton").endswith("sword.tga")
+    assert g.click_name("WRCShotButton")                 # the sword next to the shield, always shown
     assert len(list(g.shots.values())) == 1
     g.WRC_CleanScreenshot()
     assert len(list(g.shots.values())) == 2

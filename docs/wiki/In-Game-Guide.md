@@ -4,13 +4,14 @@
 
 - **Left-click** — start or stop a manual recording.
 - **Right-click** — open Settings.
-- **Hover** — *REC/STOP* slides out on the left, *Clips* on the right, *SHOT* underneath.
+- **Hover** — *REC/STOP* slides out on the left, *Clips* on the right.
+- **Camera-and-sword** (small, on the shield's lower-right edge) — clean screenshot.
 - **Drag** — move it. Position is saved.
 - Cyan dot = idle. **Red and pulsing** = WRC is asking the recorder to record.
 
 ## Clean screenshot
 
-**SHOT** pop-out, `/wrc shot` or its keybind. Hides **all** interface for one second — the whole UI (like Alt+Z), nameplates and other overlays on the world, the WRC strip and button — takes a WoW screenshot while it is gone, and puts everything back. The picture is saved in WoW's own `Screenshots` folder.
+The small **camera-and-sword** on the round icon, `/wrc shot` or its keybind. Hides **all** interface for one second — the whole UI (like Alt+Z), nameplates and other overlays on the world, the WRC strip and button — takes a WoW screenshot while it is gone, and puts everything back. The picture is saved in WoW's own `Screenshots` folder.
 
 - In combat WoW does not let addons hide the interface: WRC takes a normal screenshot and says so.
 - If combat starts during the hidden second, the interface comes back immediately.

@@ -239,7 +239,14 @@ BINDING_NAME_WRC_OPEN_FOLDER = "Show / hide clips"
 WRC_ToggleRecording = ns.ToggleManual
 WRC_OpenFolder = function() ns.ToggleClips() end
 BINDING_NAME_WRC_SCREENSHOT = "Clean screenshot (all interface hidden)"
-WRC_CleanScreenshot = function() ns.CleanScreenshot() end
+function ns.Shot()
+    if ns.CleanScreenshot then
+        ns.CleanScreenshot()
+    else   -- Shot.lua is new in 1.6.0: WoW loads new addon files only after a full restart
+        print(PREFIX .. "exit and restart WoW once to finish installing the screenshot feature")
+    end
+end
+WRC_CleanScreenshot = function() ns.Shot() end
 
 -- Classic-family clients still have the combat log: a hit between you (or your
 -- pet) and a hostile player-controlled unit is PvP combat even with no target.
@@ -302,12 +309,12 @@ local function help()
     print(PREFIX .. "commands:")
     print("  /wrc on | off - show or hide the beacon (off also stops auto-recording)")
     print("  /wrc rec - start or stop a manual recording (same as the REC button)")
-    print("  /wrc shot - clean screenshot: all interface hidden for 1 second (SHOT button)")
+    print("  /wrc shot - clean screenshot: all interface hidden for 1 second (the camera-and-sword on the WRC icon)")
     print("  /wrc settings - options and key bindings (or right-click the round WRC icon)")
     print("  /wrc clips - show your clips in game: where they are saved, and Play buttons")
     print("  /wrc folder - open the clips folder in Windows")
     print("  /wrc deaths - your last deaths and who was targeting you")
-    print("  /wrc buttons - show or hide the round WRC button (hover it for REC / Clips / SHOT)")
+    print("  /wrc buttons - show or hide the round WRC button (hover it for REC / Clips; the camera-and-sword takes a clean screenshot)")
     print("  Quick key: Options > Keybindings > AddOns > WRC, or Ctrl+Alt+R in the recorder")
     print("  /wrc test - pretend an enemy is near for 10 seconds")
     print("  /wrc size 2-12 - beacon cell size in pixels (now " .. db.cell .. ")")
@@ -333,7 +340,7 @@ SlashCmdList["WRC"] = function(msg)
     elseif cmd == "rec" then
         ns.ToggleManual()
     elseif cmd == "shot" or cmd == "screenshot" then
-        ns.CleanScreenshot()
+        ns.Shot()
     elseif cmd == "deaths" then
         local log = db.deaths or {}
         if #log == 0 then print(PREFIX .. "no deaths recorded yet") end
