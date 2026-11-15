@@ -134,7 +134,24 @@ function GetTime() return now end
 function InCombatLockdown() return combat end
 function IsInInstance() return instance ~= "none", instance end
 C_Timer = { NewTicker = function(_, fn) tickers[#tickers+1] = fn end,
-            After = function(_, fn) fn() end }
+            After = function(_, fn) if defer_timers then pending[#pending+1] = fn else fn() end end }
+pending, defer_timers, shots = {}, false, {}
+function run_pending() local p = pending; pending = {}; for _, fn in ipairs(p) do fn() end end
+overlay = widget(); overlay.alpha = 1
+function overlay:GetAlpha() return self.alpha end
+function overlay:SetAlpha(a) self.alpha = a end
+function overlay:IsForbidden() return false end
+function overlay:IsProtected() return false end
+locked = widget(); locked.alpha = 1
+function locked:GetAlpha() return self.alpha end
+function locked:SetAlpha(a) self.alpha = a end
+function locked:IsForbidden() return true end
+function WorldFrame:GetChildren() return overlay, locked end
+function Screenshot()
+  local beaconShown = false
+  for _, f in ipairs(frames) do if f.name == "WRCBeaconFrame" then beaconShown = f.shown end end
+  shots[#shots+1] = { ui = UIParent.shown, beacon = beaconShown, overlay = overlay.alpha, locked = locked.alpha }
+end
 GameTooltip = nil
 hovered = {}
 function click_name(name) for _, f in ipairs(frames) do
@@ -311,12 +328,12 @@ def test_addon_slash_commands_manual_test_size_corner_off():
 
 def test_addon_ingame_buttons_rec_and_folder():
     game = Game()
-    assert game.g.button_texts() == "REC,Clips"
+    assert game.g.button_texts() == "REC,Clips,SHOT"
     assert game.g.click("REC")
     hit = read(game)
-    assert hit.manual and hit.word == "REC" and game.g.button_texts() == "STOP,Clips"
+    assert hit.manual and hit.word == "REC" and game.g.button_texts() == "STOP,Clips,SHOT"
     assert game.g.click("STOP")
-    assert not read(game).manual and game.g.button_texts() == "REC,Clips"
+    assert not read(game).manual and game.g.button_texts() == "REC,Clips,SHOT"
     game.slash("folder")
     hit = read(game)
     assert hit.folder and hit.checksum_ok and not hit.enemy and not hit.manual
@@ -332,10 +349,10 @@ def test_addon_round_button_popouts_and_icon_state():
     g = game.g
     assert g.shown_buttons() == ""                      # pop-outs are hidden until you hover
     assert g.hover("WRCRoundButton", True)
-    assert g.shown_buttons() == "REC,Clips"
+    assert g.shown_buttons() == "REC,Clips,SHOT"
     g.hover("WRCRoundButton", False)                    # mouse moves onto a pop-out: they stay
     g.hover("REC", True)
-    assert g.shown_buttons() == "REC,Clips"
+    assert g.shown_buttons() == "REC,Clips,SHOT"
     g.hover("REC", False)                               # mouse leaves everything: they close
     assert g.shown_buttons() == ""
     assert g.texture_of("WRCRoundButton").endswith("round_idle.tga")
@@ -347,7 +364,7 @@ def test_addon_round_button_popouts_and_icon_state():
     assert not g.pulsing("WRCRoundButton")
     game.unit("target", player=True, faction="Alliance", attackable=True)        # an enemy appears
     assert read(game).enemy and g.pulsing("WRCRoundButton")
-    assert g.texture_of("WRCRoundButton").endswith("round_rec.tga") and g.button_texts() == "REC,Clips"
+    assert g.texture_of("WRCRoundButton").endswith("round_rec.tga") and g.button_texts() == "REC,Clips,SHOT"
     game.unit("target")
     game.advance(1)
     assert not g.pulsing("WRCRoundButton")
@@ -798,3 +815,64 @@ def test_trim_tail_keeps_only_the_end(tmp_path):
     import re
     h, m, sec = re.search(r"Duration: (\d+):(\d+):([\d.]+)", info).groups()
     assert 3.0 <= float(sec) <= 6.0 and not os.path.exists(src + ".trim.mp4")
+
+
+def test_clean_screenshot_hides_all_interface_then_restores():
+    game = Game()
+    g = game.g
+    game.slash("shot")
+    shots = list(g.shots.values())
+    assert len(shots) == 1
+    shot = shots[0]
+    assert shot.ui is False and shot.beacon is False      # UI and WRC strip gone for the picture
+    assert shot.overlay == 0                             # nameplates / world overlays faded out
+    assert shot.locked == 1                              # forbidden frames are never touched
+    assert g.UIParent.shown is True and g.overlay.alpha == 1   # everything back afterwards
+    assert any("clean screenshot saved" in p for p in g.printed.values())
+    assert read(game) is not None                        # beacon is back and readable
+
+
+def test_clean_screenshot_in_combat_takes_normal_shot():
+    game = Game()
+    g = game.g
+    g.combat = True
+    game.slash("shot")
+    shots = list(g.shots.values())
+    assert len(shots) == 1 and shots[0].ui is True       # WoW forbids hiding the UI in combat
+    assert any("in combat" in p for p in g.printed.values())
+
+
+def test_clean_screenshot_restores_when_combat_starts():
+    game = Game()
+    g = game.g
+    g.defer_timers = True
+    game.slash("shot")
+    assert g.UIParent.shown is False
+    g.fire("PLAYER_REGEN_DISABLED")                      # combat about to start: UI back at once
+    assert g.UIParent.shown is True and g.overlay.alpha == 1
+    g.defer_timers = False
+    g.run_pending()
+    assert len(list(g.shots.values())) == 0
+    assert any("cancelled" in p for p in g.printed.values())
+
+
+def test_shot_popout_and_key_binding():
+    game = Game()
+    g = game.g
+    g.hover("WRCRoundButton", True)
+    assert g.click("SHOT")
+    assert len(list(g.shots.values())) == 1
+    g.WRC_CleanScreenshot()
+    assert len(list(g.shots.values())) == 2
+    assert "Clean screenshot" in g.BINDING_NAME_WRC_SCREENSHOT
+
+
+def test_recorder_bridges_short_beacon_gaps():
+    from wrc_recorder.app import hold_last
+    seen = object()
+    f, last, t = hold_last(seen, None, 0.0, 10.0)
+    assert f is seen and t == 10.0
+    f, last, t = hold_last(None, last, t, 11.2)          # hidden for a clean screenshot
+    assert f is seen
+    f, last, t = hold_last(None, last, t, 14.0)          # really gone
+    assert f is None

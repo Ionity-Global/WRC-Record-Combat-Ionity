@@ -2,7 +2,7 @@
 ## Title: WRC - WoW Record Combat |cff00c6ff(Ionity)|r
 ## Notes: Tiny on-screen beacon that lights up when opposite-faction players are near or fighting you, so the free WRC Recorder app can auto-record your PvP in small, high-quality clips.
 ## Author: Johan Wilhelm van Antwerp - Ionity (Pty) Ltd
-## Version: 1.5.0
+## Version: 1.6.0
 ## SavedVariables: WRC_DB
 ## Category: PvP
 ## IconTexture: Interface\AddOns\WRC\icon.tga
@@ -16,4 +16,5 @@ Buttons.lua
 Clips.lua
 Panel.lua
 Settings.lua
+Shot.lua
 Core.lua

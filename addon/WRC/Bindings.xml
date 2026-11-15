@@ -5,4 +5,7 @@
     <Binding name="WRC_OPEN_FOLDER" category="ADDONS">
         WRC_OpenFolder()
     </Binding>
+    <Binding name="WRC_SCREENSHOT" category="ADDONS">
+        WRC_CleanScreenshot()
+    </Binding>
 </Bindings>

@@ -13,7 +13,7 @@
    - Classic Era — `World of Warcraft\_classic_era_\Interface\AddOns\WRC`
 4. Or run `install_addon.bat` from the repository; it looks in the common install locations.
 
-Log in. Chat shows `WRC v1.5.0 by Ionity loaded`, a thin strip appears top-left and the round WRC button sits on screen.
+Log in. Chat shows `WRC v1.6.0 by Ionity loaded`, a thin strip appears top-left and the round WRC button sits on screen.
 
 ## 2. The recorder
 

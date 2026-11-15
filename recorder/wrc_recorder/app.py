@@ -20,6 +20,18 @@ from .trigger import SPLIT, START, STOP, Trigger, wanted
 log = logging.getLogger("wrc")
 RESCAN_SECONDS = 1.5        # how often to search whole screens while the beacon is not locked
 STALE_SECONDS = 5.0         # a beacon whose heartbeat stops is a frozen picture, not a live game
+BEACON_GRACE = 3.0          # the beacon may vanish this long (clean screenshot, loading) without changing anything
+
+
+def hold_last(found, last, last_t, now, grace=BEACON_GRACE):
+    """Bridge short gaps in the beacon. Returns (reading to act on, last, last_t).
+    While the addon hides all UI for a clean screenshot the beacon is gone for
+    about a second; acting on that would stop an in-game manual recording."""
+    if found is not None:
+        return found, found, now
+    if last is not None and now - last_t <= grace:
+        return last, last, last_t
+    return None, last, last_t
 
 
 def to_rgb(shot):
@@ -238,10 +250,12 @@ class App:
 
         with mss.mss() as sct:
             tracker = BeaconTracker(sct)
+            last_found, last_found_t = None, 0.0
             while not self.stop_event.is_set():
                 now = time.time()
                 found = tracker.read(now)
                 self.beacon_seen = found is not None
+                found, last_found, last_found_t = hold_last(found, last_found, last_found_t, now)
                 trusted = found is not None and found.trusted
                 if found is not None and found.name:
                     character = found.name.title()

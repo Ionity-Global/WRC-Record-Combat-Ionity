@@ -14,7 +14,7 @@
 local ADDON, ns = ...
 local Beacon = ns.Beacon
 
-local VERSION = "1.5.0"
+local VERSION = "1.6.0"
 local PREFIX = "|cff00c6ffWRC|r "
 local TICK = 0.2          -- seconds between scans
 local ENEMY_HOLD = 6      -- an enemy seen this recently still counts for PvP combat
@@ -238,6 +238,8 @@ BINDING_NAME_WRC_TOGGLE_REC = "Start / stop recording"
 BINDING_NAME_WRC_OPEN_FOLDER = "Show / hide clips"
 WRC_ToggleRecording = ns.ToggleManual
 WRC_OpenFolder = function() ns.ToggleClips() end
+BINDING_NAME_WRC_SCREENSHOT = "Clean screenshot (all interface hidden)"
+WRC_CleanScreenshot = function() ns.CleanScreenshot() end
 
 -- Classic-family clients still have the combat log: a hit between you (or your
 -- pet) and a hostile player-controlled unit is PvP combat even with no target.
@@ -300,11 +302,12 @@ local function help()
     print(PREFIX .. "commands:")
     print("  /wrc on | off - show or hide the beacon (off also stops auto-recording)")
     print("  /wrc rec - start or stop a manual recording (same as the REC button)")
+    print("  /wrc shot - clean screenshot: all interface hidden for 1 second (SHOT button)")
     print("  /wrc settings - options and key bindings (or right-click the round WRC icon)")
     print("  /wrc clips - show your clips in game: where they are saved, and Play buttons")
     print("  /wrc folder - open the clips folder in Windows")
     print("  /wrc deaths - your last deaths and who was targeting you")
-    print("  /wrc buttons - show or hide the round WRC button (hover it for REC / Folder)")
+    print("  /wrc buttons - show or hide the round WRC button (hover it for REC / Clips / SHOT)")
     print("  Quick key: Options > Keybindings > AddOns > WRC, or Ctrl+Alt+R in the recorder")
     print("  /wrc test - pretend an enemy is near for 10 seconds")
     print("  /wrc size 2-12 - beacon cell size in pixels (now " .. db.cell .. ")")
@@ -329,6 +332,8 @@ SlashCmdList["WRC"] = function(msg)
         print(PREFIX .. "beacon " .. cmd)
     elseif cmd == "rec" then
         ns.ToggleManual()
+    elseif cmd == "shot" or cmd == "screenshot" then
+        ns.CleanScreenshot()
     elseif cmd == "deaths" then
         local log = db.deaths or {}
         if #log == 0 then print(PREFIX .. "no deaths recorded yet") end

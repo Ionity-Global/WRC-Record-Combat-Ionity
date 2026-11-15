@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| **Version** | 1.5.0 (2026-11-14) |
+| **Version** | 1.6.0 (2026-11-15) |
 | **Clients** | WoW: Forever 1.60.1 (tested live). TOC also lists Retail 12.0, Mists Classic, Cata/Wrath Classic and Classic Era (untested) |
 | **Platform** | Windows 10/11 |
 | **Licence** | CC BY-NC-SA 4.0 · Policy 986 AED |
@@ -14,7 +14,7 @@
 
 | Part | What it does |
 |---|---|
-| **WRC addon** | Detects enemy players, draws a small coded strip (the *beacon*) in a screen corner, gives you a round in-game button, a clips panel, settings and keybinds, and a death report. |
+| **WRC addon** | Detects enemy players, draws a small coded strip (the *beacon*) in a screen corner, gives you a round in-game button, a clips panel, a clean-screenshot button, settings and keybinds, and a death report. |
 | **WRC Recorder** | Small Windows app. Reads the beacon from the screen and runs FFmpeg with the best encoder your PC has (AV1 › HEVC › H.264). |
 
 The recorder only reads screen pixels. It never reads game memory, injects code, or sends keys or clicks to the game.

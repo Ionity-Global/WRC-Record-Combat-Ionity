@@ -4,9 +4,17 @@
 
 - **Left-click** — start or stop a manual recording.
 - **Right-click** — open Settings.
-- **Hover** — *REC/STOP* slides out on the left, *Clips* on the right.
+- **Hover** — *REC/STOP* slides out on the left, *Clips* on the right, *SHOT* underneath.
 - **Drag** — move it. Position is saved.
 - Cyan dot = idle. **Red and pulsing** = WRC is asking the recorder to record.
+
+## Clean screenshot
+
+**SHOT** pop-out, `/wrc shot` or its keybind. Hides **all** interface for one second — the whole UI (like Alt+Z), nameplates and other overlays on the world, the WRC strip and button — takes a WoW screenshot while it is gone, and puts everything back. The picture is saved in WoW's own `Screenshots` folder.
+
+- In combat WoW does not let addons hide the interface: WRC takes a normal screenshot and says so.
+- If combat starts during the hidden second, the interface comes back immediately.
+- A recording that is running carries on: the recorder ignores beacon gaps of up to 3 seconds.
 
 ## Clips panel
 
@@ -26,7 +34,7 @@ WoW cannot play video, so playback happens outside the game.
 - Attackable enemies only
 - Show round button
 - Beacon size (−/+) and corner
-- **Keybinds**: click a key field and press a key (Esc cancels). Not available in combat. The same binds are under *Options › Keybindings › AddOns › WRC*.
+- **Keybinds** for Record, Clips and Clean screenshot: click a key field and press a key (Esc cancels). Not available in combat. The same binds are under *Options › Keybindings › AddOns › WRC*.
 
 ## Commands
 
@@ -34,6 +42,7 @@ WoW cannot play video, so playback happens outside the game.
 |---|---|
 | `/wrc on` / `off` | Show or hide the beacon (off stops auto-recording) |
 | `/wrc rec` | Start/stop a manual recording |
+| `/wrc shot` | Clean screenshot, all interface hidden for 1 s |
 | `/wrc settings` | Options and keybinds |
 | `/wrc clips` | In-game clips panel |
 | `/wrc folder` | Open the clips folder in Windows |

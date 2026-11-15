@@ -2,7 +2,7 @@
 ========================================================================================
 WRC - WOW RECORD COMBAT - IONITY
 Author: Johan Wilhelm van Antwerp | Ionity (Pty) Ltd | AEDI
-Version: 1.5.0 | Updated: 2026-11-14 SAST | Classification: PUBLIC
+Version: 1.6.0 | Updated: 2026-11-15 SAST | Classification: PUBLIC
 Governance: Policy 986 AED | License: CC BY-NC-SA 4.0 where stated
 (c) 2018-2026 Antwerp Designs | Ionity (Pty) Ltd - All Rights Reserved
 Web: https://www.ionity.today | https://www.ionity.world | Ref: https://www.ionity.co.za
@@ -80,6 +80,7 @@ once the folder passes 20 GB (set `max_storage_gb` to 0 to never delete).
 |---|---|
 | `/wrc on` / `off` | Show or hide the beacon (off stops auto-recording) |
 | `/wrc rec` | Start or stop a manual recording (same as the in-game REC button) |
+| `/wrc shot` | Clean screenshot: all interface hidden for 1 second (also the SHOT pop-out and a key binding) |
 | `/wrc settings` | Options and key bindings (also: right-click the round icon) |
 | `/wrc clips` | In-game clips panel: where clips are saved, the newest clips, Play buttons |
 | `/wrc folder` | Open the clips folder in Windows |

@@ -1,7 +1,7 @@
 -- WRC - WoW Record Combat | Ionity (Pty) Ltd | Author: Johan Wilhelm van Antwerp
 -- (c) 2018-2026 Antwerp Designs | Ionity (Pty) Ltd | Policy 986 AED | CC BY-NC-SA 4.0
 --
--- In-game settings: the beacon options and the two key bindings. Open with
+-- In-game settings: the beacon options and the three key bindings. Open with
 -- /wrc settings, the Settings button in the clips panel, or a right-click on
 -- the round WRC icon. Keys set here are ordinary WoW key bindings (the same
 -- ones listed under Options > Keybindings > AddOns > WRC).
@@ -55,7 +55,7 @@ end
 local function build()
     local db = ns.db
     panel = CreateFrame("Frame", "WRCSettingsPanel", UIParent)
-    panel:SetSize(WIDTH, 78 + 7 * ROW_H)
+    panel:SetSize(WIDTH, 78 + 8 * ROW_H)
     panel:SetPoint("CENTER", UIParent, "CENTER", 0, 40)
     panel:SetFrameStrata("DIALOG")
     panel:SetToplevel(true)
@@ -149,6 +149,7 @@ local function build()
     end
     keyRow("Record key (start / stop)", "WRC_TOGGLE_REC")
     keyRow("Clips key (show / hide)", "WRC_OPEN_FOLDER")
+    keyRow("Clean screenshot key", "WRC_SCREENSHOT")
 
     local note = panel:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
     note:SetPoint("BOTTOMLEFT", panel, "BOTTOMLEFT", 16, 12)

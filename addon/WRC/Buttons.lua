@@ -1,8 +1,9 @@
 -- WRC - WoW Record Combat | Ionity (Pty) Ltd | Author: Johan Wilhelm van Antwerp
 -- (c) 2018-2026 Antwerp Designs | Ionity (Pty) Ltd | Policy 986 AED | CC BY-NC-SA 4.0
 --
--- A round WRC icon with two side pop-outs. Hover the icon and REC slides out on
--- the left, Clips (the in-game clips panel) on the right. Click the icon itself to start or stop a
+-- A round WRC icon with pop-outs. Hover the icon and REC slides out on the
+-- left, Clips (the in-game clips panel) on the right and SHOT (a clean
+-- screenshot with all interface hidden for a second) underneath. Click the icon itself to start or stop a
 -- recording; drag it to move it. The dot in the icon is cyan when idle; while WRC
 -- is asking for a recording it turns red and the icon pulses.
 -- An addon cannot open folders or record by itself: these controls only change
@@ -15,15 +16,16 @@ local ICON_REC = "Interface\\AddOns\\WRC\\round_rec.tga"
 local SIZE, POP_W, POP_H, GAP = 44, 62, 24, 4
 local HIDE_DELAY = 0.8
 
-local round, icon, pulse, popRec, popFolder
+local round, icon, pulse, popRec, popFolder, popShot
 
 local function anyHovered()
-    return round:IsMouseOver() or popRec:IsMouseOver() or popFolder:IsMouseOver()
+    return round:IsMouseOver() or popRec:IsMouseOver() or popFolder:IsMouseOver() or popShot:IsMouseOver()
 end
 
 local function showPops()
     popRec:Show()
     popFolder:Show()
+    popShot:Show()
 end
 
 local function hidePopsLater()
@@ -31,13 +33,14 @@ local function hidePopsLater()
         if not anyHovered() then
             popRec:Hide()
             popFolder:Hide()
+            popShot:Hide()
         end
     end)
 end
 
-local function makePop(text, point, relPoint, x, onClick)
+local function makePop(text, point, relPoint, x, y, onClick)
     local b = ns.Pill(round, text, POP_W, POP_H, onClick)
-    b:SetPoint(point, round, relPoint, x, 0)
+    b:SetPoint(point, round, relPoint, x, y)
     b:SetScript("OnEnter", showPops)
     b:SetScript("OnLeave", hidePopsLater)
     b:Hide()
@@ -78,8 +81,9 @@ function ns.InitButtons(db)
             round:SetPoint("TOP", UIParent, "TOP", 0, -60)
         end
 
-        popRec = makePop("REC", "RIGHT", "LEFT", -GAP, function() ns.ToggleManual() end)
-        popFolder = makePop("Clips", "LEFT", "RIGHT", GAP, function() ns.ToggleClips() end)
+        popRec = makePop("REC", "RIGHT", "LEFT", -GAP, 0, function() ns.ToggleManual() end)
+        popFolder = makePop("Clips", "LEFT", "RIGHT", GAP, 0, function() ns.ToggleClips() end)
+        popShot = makePop("SHOT", "TOP", "BOTTOM", 0, -GAP, function() ns.CleanScreenshot() end)
 
         round:RegisterForClicks("LeftButtonUp", "RightButtonUp")
         round:SetScript("OnClick", function(_, button)
@@ -96,6 +100,7 @@ function ns.InitButtons(db)
                 GameTooltip:SetText("WRC  |cff00c6ffIONITY|r")
                 GameTooltip:AddLine("Click: start / stop recording", 1, 1, 1)
                 GameTooltip:AddLine("Right-click: settings and keys", 1, 1, 1)
+                GameTooltip:AddLine("SHOT: screenshot with all interface hidden", 1, 1, 1)
                 GameTooltip:AddLine("Drag: move", 1, 1, 1)
                 GameTooltip:Show()
             end
