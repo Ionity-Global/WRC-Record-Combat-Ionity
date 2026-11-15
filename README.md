@@ -26,10 +26,19 @@ The recorder only looks at screen pixels. It does not read game memory, inject
 anything, or press keys, and the addon only displays what the game already
 shows you.
 
+## Download
+
+| | |
+|---|---|
+| **Addon + Recorder** | [Latest release](https://github.com/Ionity-Global/WRC-Record-Combat-Ionity/releases/latest) — `WRC-<version>.zip` and `WRC-Recorder.exe` |
+| **Addon on CurseForge** | [WRC Record Combat - Ionity](https://www.curseforge.com/wow/addons/wrc-record-combat-ionity) (pending approval) |
+| **Guide** | [Wiki](https://github.com/Ionity-Global/WRC-Record-Combat-Ionity/wiki) (source copy in `docs/wiki`) |
+
 ## Quick start
 
 1. Run `install_addon.bat` (or copy `addon\WRC` into `Interface\AddOns`).
-2. Run `recorder\build.bat` once to make `release\WRC-Recorder.exe`, then start it.
+2. Run `recorder\build.bat` once to make `release\WRC-Recorder.exe`, then start it
+   (or download it from the latest release).
    The first start downloads FFmpeg if you do not have it and tests your
    hardware (a few seconds).
 3. Log in. A small strip appears top-left. Type `/wrc test`: the strip reads
